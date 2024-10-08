@@ -1,6 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "graph.h"
+#include <cuda_runtime.h>
 
+// #include <cuda_runtime.h>
 #include <cassert>
 #include <fstream>
 #include <vector>
@@ -53,7 +55,8 @@ static std::string integer_to_string(long long number) {
 }
 //----------------------------------------------------------------------
 
-Graph::Graph(const char *_dir) : dir(_dir), n(0), m(0), neighbors_offset(nullptr), neighbors(nullptr), degree(nullptr),reverse(nullptr){
+Graph::Graph(const char *_dir) : dir(_dir), n(0), m(0), neighbors_offset(nullptr),
+neighbors(nullptr), degree(nullptr),reverse(nullptr), weights(nullptr), apsp(nullptr), d_apsp(nullptr){
 }
 
 Graph::~Graph() {
@@ -61,6 +64,10 @@ Graph::~Graph() {
     delete[] neighbors;
     delete[] degree;
     delete[] reverse;
+	delete[] apsp;
+	delete[] weights;
+    // cudaFree(d_apsp);
+	freeGraphGPUMemory();
 }
 
 void Graph::readTextFile(const char* filepath) {
@@ -152,6 +159,18 @@ void Graph::readBinaryFile(const char* filepath) {
         std::cout << neighbors[i] << " ";
     }
     std::cout << std::endl;
+
+	// After reading, allocate GPU memory and copy data
+
+	// Assigning edge weights
+
+	assignEdgeWeights();
+
+	// Compute APSP after reading the graph
+    computeAPSP();
+
+	mallocGraphGPUMemory();
+    copyToGPU();
 
     delete[] degree;
     fclose(f);
@@ -278,19 +297,53 @@ void Graph::readRawSNAPText(const char* filepath) {
 	neighbors_offset[n] = j;
 }
 
-int main() {
-    const char* directory = "."; // This means the current directory
-    Graph g(directory);
-    
-    // Read the text file
-    g.readTextFile("test_gh.txt");
-    
-    // Write to a binary file
-    g.writeBinaryFile("test.bin");
-    
-    // Read the binary file back (to test)
-    Graph g2(directory);
-    g2.readBinaryFile("test.bin");
-    
-    return 0;
+void Graph::mallocGraphGPUMemory() {
+    cudaMalloc(&d_neighbors_offset, (n + 1) * sizeof(ept));
+    cudaMalloc(&d_neighbors, m * sizeof(ui));
+    cudaMalloc(&d_degree, n * sizeof(ui));
+	cudaMalloc(&d_weights, m * sizeof(float));
+    // cudaMalloc(&d_apsp, n * n * sizeof(float));
+}
+
+void Graph::freeGraphGPUMemory() {
+
+	if (d_neighbors_offset) cudaFree(d_neighbors_offset);
+    if (d_neighbors) cudaFree(d_neighbors);
+    if (d_degree) cudaFree(d_degree);
+    if (d_weights) cudaFree(d_weights);
+    if (d_apsp) cudaFree(d_apsp);
+
+    d_neighbors_offset = nullptr;
+    d_neighbors = nullptr;
+    d_degree = nullptr;
+    d_weights = nullptr;
+    d_apsp = nullptr;
+
+    // cudaFree(d_neighbors_offset);
+    // cudaFree(d_neighbors);
+    // cudaFree(d_degree);
+	// cudaFree(d_weights);
+    // cudaFree(d_apsp);
+}
+
+void Graph::copyToGPU() {
+    cudaMemcpy(d_neighbors_offset, neighbors_offset, (n + 1) * sizeof(ept), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_neighbors, neighbors, m * sizeof(ui), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_degree, degree, n * sizeof(ui), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_weights, weights, m * sizeof(float), cudaMemcpyHostToDevice);
+}
+
+void Graph::copyFromGPU() {
+    cudaMemcpy(neighbors_offset, d_neighbors_offset, (n + 1) * sizeof(ept), cudaMemcpyDeviceToHost);
+    cudaMemcpy(neighbors, d_neighbors, m * sizeof(ui), cudaMemcpyDeviceToHost);
+    cudaMemcpy(degree, d_degree, n * sizeof(ui), cudaMemcpyDeviceToHost);
+	cudaMemcpy(weights, d_weights, m * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(apsp, d_apsp, n * n * sizeof(float), cudaMemcpyDeviceToHost);
+}
+
+void Graph::assignEdgeWeights() {
+    weights = new float[m];
+    for (ept i = 0; i < m; ++i) {
+        weights[i] = 1.0f;  // Assign weight 1 to each edge
+    }
 }
