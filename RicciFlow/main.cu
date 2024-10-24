@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
     cudaDeviceSynchronize();
     floyd_warshall_kernel<<<BLK_NUMS, BLK_DIM>>>(g);
     cudaDeviceSynchronize();
-    cout<<g->n<<endl;
+    cout<<"n: "<<g->n<<endl;
     chkerr(cudaMemcpy(g->offset, g->d_offset, g->n * sizeof(ui), cudaMemcpyDeviceToHost));
     for(ui i=0;i<g->n;i++){
         cout<<g->offset[i]<<" ";

@@ -31,6 +31,7 @@ inline void chkerr(cudaError_t code)
 {
     if (code != cudaSuccess)
     {
+        cout<<"Error occured: ";
         std::cout << cudaGetErrorString(code) << std::endl;
         exit(-1);
     }
