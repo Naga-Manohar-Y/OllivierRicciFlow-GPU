@@ -9,6 +9,7 @@ int main(int argc, char* argv[]) {
         cout<<g->offset[i]<<" ";
     }
     cout<<endl;
+    cudaDeviceSynchronize();
     floyd_warshall_kernel<<<BLK_NUMS, BLK_DIM>>>(g);
     cudaDeviceSynchronize();
 
