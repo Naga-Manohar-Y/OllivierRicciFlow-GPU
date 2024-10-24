@@ -4,7 +4,7 @@
 #include "graph.h"
 
 __global__ void floyd_warshall_kernel(GPUGraph* g) {
-    if(GTHID<10) printf("Hello");
+    if(GTHID<10) printf("%d ", g->d_offset[GTHID]);
 }
 
 #endif
