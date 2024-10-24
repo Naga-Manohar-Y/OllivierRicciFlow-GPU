@@ -6,7 +6,6 @@
 __global__ void floyd_warshall_kernel(GPUGraph* g) {
     if(THID<g->n) {
         g->d_offset[THID]*=2;
-        printf("%d ", THID);
     }
 }
 
