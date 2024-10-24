@@ -4,7 +4,7 @@
 #include "graph.h"
 
 __global__ void floyd_warshall_kernel(GPUGraph* g) {
-    if(THID<10) printf("%d ", g->d_offset[THID]);
+    if(THID<g->n) g->d_offset[i]*=2;
 }
 
 #endif
