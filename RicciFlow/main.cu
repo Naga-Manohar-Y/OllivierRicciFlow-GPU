@@ -6,5 +6,6 @@ int main(int argc, char* argv[]) {
     cudaMallocManaged(&g, sizeof(GPUGraph));
     g->readBinaryFile(argv[1]);
     floyd_warshall_kernel<<<BLK_NUMS, BLK_DIM>>>(g);
+    cudaDeviceSynchronize();
     return 0;
 }
