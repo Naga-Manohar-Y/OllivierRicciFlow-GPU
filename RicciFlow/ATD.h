@@ -22,11 +22,6 @@ float* compute_apsp(GPUGraph* g){
     float* apsp;
     cudaMallocManaged(&apsp, N*N*sizeof(float));
     fill(apsp, apsp+N*N, INF);
-    for(ui i=0;i<N;i++){
-        for(ui j=0;j<N;j++)
-            cout<<apsp[i*N+j]<<" ";
-        cout<<endl;
-    }
     for(ui u=0;u<N;u++)
         for(ui j=g->offset[u];j<g->offset[u+1];j++)
             apsp[u*N+g->neighbors[j]]= 1;
@@ -34,6 +29,11 @@ float* compute_apsp(GPUGraph* g){
     for(ui w=0;w<N;w++)
         fw_pass<<<BLK_NUMS, BLK_DIM>>>(g, w, apsp);
     cudaDeviceSynchronize();
+    for(ui i=0;i<N;i++){
+        for(ui j=0;j<N;j++)
+            cout<<apsp[i*N+j]<<" ";
+        cout<<endl;
+    }
     return apsp;
 }
 
