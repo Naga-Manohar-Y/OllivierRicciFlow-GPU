@@ -25,8 +25,10 @@ typedef ui ept;
 #define LANEID (THID & 31)
 #define FULL 0xFFFFFFFF
 #define GLWARPID (BLKID * WARPS_EACH_BLK + WARPID)
-#define GTHID (BLKID*N_THREADS+THID)
+#define GTHID (BLKID*BLK_DIM+THID)
 
+#define N (g->n)
+#define INF 1e6
 inline void chkerr(cudaError_t code)
 {
     if (code != cudaSuccess)
