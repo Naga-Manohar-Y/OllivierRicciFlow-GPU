@@ -21,7 +21,7 @@ __global__ void fw_pass(GPUGraph* g, ui w, float* apsp) {
 float* compute_apsp(GPUGraph* g){
     float* apsp;
     cudaMallocManaged(&apsp, N*N*sizeof(float));
-    fill(apsp, apsp+N, INF);
+    fill(apsp, apsp+N*N, INF);
     for(ui i=0;i<N;i++){
         for(ui j=0;j<N;j++)
             cout<<apsp[i*N+j]<<" ";
