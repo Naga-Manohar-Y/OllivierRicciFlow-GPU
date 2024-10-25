@@ -28,8 +28,8 @@ public:
     RicciFlow(GPUGraph *_g){
         g=_g;
         cudaMallocManaged(&apsp, sizeof(float)*N*N);
-        cudaMallocManaged(&edge_RC, sizeof(float)*M);
-        cudaMallocManaged(&node_RC, sizeof(float)*N);
+        cudaMalloc(&edge_RC, sizeof(float)*M);
+        cudaMalloc(&node_RC, sizeof(float)*N);
         cudaMallocManaged(&gsum, sizeof(float));
     }
     void compute_edge_RC(){

@@ -9,7 +9,7 @@ __global__ void fw_pass(GPUGraph* g, ui w, float* apsp) {
         ui u = GTHID/N;
         ui v = GTHID%N;
 
-        float x = apsp[m_ind(w, u)]; // still need to address memory coalescing issue. and may be we need to calculate only upper/lower diagonal of matrix
+        float x = apsp[m_ind(w, u)]; // It accesses only w-th row, but still need to address memory coalescing issue. and may be we need to calculate only upper/lower diagonal of matrix
         float y = apsp[m_ind(w, v)];
         if(x==INF||y==INF) continue;
         x+=y;
@@ -17,12 +17,15 @@ __global__ void fw_pass(GPUGraph* g, ui w, float* apsp) {
     }
 }
 
+__global__ void init_apsp(GPUGraph* g, float* apsp) {
+    for(ui e=GTHID; e<M; e+=N_THREADS)
+        apsp[m_ind(g->edges[2*e], g->edges[2*e+1])] = g->d_weights[e];
+}
 
 void compute_apsp(GPUGraph* g, float* apsp){
     fill(apsp, apsp+N*N, INF);
-    for(ui u=0;u<N;u++)
-        for(ui j=g->offset[u];j<g->offset[u+1];j++)
-            apsp[u*N+g->neighbors[j]]= g->d_weights[j];
+
+    init_apsp<<<BLK_NUMS, BLK_DIM>>>(g, apsp);
     
     for(ui w=0;w<N;w++)
         fw_pass<<<BLK_NUMS, BLK_DIM>>>(g, w, apsp);
