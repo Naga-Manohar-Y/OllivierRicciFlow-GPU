@@ -9,8 +9,8 @@ __global__ void fw_pass(GPUGraph* g, ui w, float* apsp) {
         ui u = GTHID/N;
         ui v = GTHID%N;
 
-        float x = apsp[w*n+u];
-        float y = apsp[w*n+v];
+        float x = apsp[w*N+u];
+        float y = apsp[w*N+v];
         if(x==INF||y==INF) continue;
         x+=y;
         if(x<apsp[uv]) apsp[uv] = x;
