@@ -28,7 +28,12 @@ typedef ui ept;
 #define GTHID (BLKID*BLK_DIM+THID)
 
 #define N (g->n)
+#define M (g->m)
 #define INF 1e6
+#define N_ITER 10
+#define ALPHA 0.5
+#define m_ind(src,dst) (src*N+dst)
+
 inline void chkerr(cudaError_t code)
 {
     if (code != cudaSuccess)
@@ -37,6 +42,14 @@ inline void chkerr(cudaError_t code)
         std::cout << cudaGetErrorString(code) << std::endl;
         exit(-1);
     }
+}
+
+__device__ float warp_sum(float val) {
+    // Perform a warp-wide sum using shfl_down_sync
+    for (int offset = warpSize / 2; offset > 0; offset /= 2) {
+        val += __shfl_down_sync(0xFFFFFFFF, val, offset);
+    }
+    return val;
 }
 
 #endif

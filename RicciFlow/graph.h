@@ -13,8 +13,13 @@ public:
     ept *offset; // offset of neighbors of nodes
     ui *neighbors;         // adjacent ids of edges
     ui *degree;            // degree of each node
-
-    ~Graph();
+    pair<ui, ui> *edges;
+    float* weights;
+    ~Graph(){
+        delete[] offset;
+        delete[] neighbors;
+        delete[] degree;
+    }
     void readBinaryFile(const char* _file)
     {
         file = string(_file);
@@ -51,21 +56,36 @@ public:
 
         offset[0] = 0;
         partial_sum(degree, degree + n, offset + 1);
-
         fread(neighbors, sizeof(ui), m, f);
+
+        edges=new ui[m*2];
+        for(ui i=0;i<n;i++)
+            for(ui j=offset[i];j<offset[i+1];j++)
+                edges[2*j]=i, edges[2*j+1]=neighbors[j];
+        weights=new float[m];
+        fill(weights, weights+m, 1);
     }
 };
 
 
 class GPUGraph: public Graph{
 public:
+    ui *d_degree;
     ept *d_offset; // offset of neighbors of nodes
     ui *d_neighbors;         // adjacent ids of edges
+    ui* d_edges;
+    float* d_weights;
     void copyToGPU(){
+        chkerr(cudaMalloc(&(d_degree), (n) * sizeof(ui)));
+        chkerr(cudaMemcpy(d_degree, degree, (n) * sizeof(ui), cudaMemcpyHostToDevice));
         chkerr(cudaMalloc(&(d_offset), (n+1) * sizeof(ept)));
         chkerr(cudaMemcpy(d_offset, offset, (n+1) * sizeof(ept), cudaMemcpyHostToDevice));
         chkerr(cudaMalloc(&(d_neighbors), m * sizeof(ui)));
         chkerr(cudaMemcpy(d_neighbors, neighbors, m * sizeof(ui), cudaMemcpyHostToDevice));
+        chkerr(cudaMalloc(&(d_edges), 2*m * sizeof(ui)));
+        chkerr(cudaMemcpy(d_edges, edges, 2*m * sizeof(ui), cudaMemcpyHostToDevice));
+        chkerr(cudaMalloc(&(d_weights), m * sizeof(float)));
+        chkerr(cudaMemset(d_weights, 1, m * sizeof(float)));
     }
 };
 #endif
