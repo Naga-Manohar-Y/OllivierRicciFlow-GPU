@@ -13,7 +13,7 @@ public:
     ept *offset; // offset of neighbors of nodes
     ui *neighbors;         // adjacent ids of edges
     ui *degree;            // degree of each node
-    pair<ui, ui> *edges;
+    ui *edges;
     float* weights;
     ~Graph(){
         delete[] offset;
