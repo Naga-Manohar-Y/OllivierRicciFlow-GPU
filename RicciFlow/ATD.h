@@ -35,8 +35,8 @@ void compute_apsp(GPUGraph* g, float* apsp){
 __global__ void d_compute_RC_ATD(GPUGraph* g, float* apsp, float* edge_RC){
     for(ui e=GLWARPID; e<M; e+=N_WARPS){
         ui src, dst;
-        src=g->edges[e*2];
-        dst=g->edges[e*2+1];
+        src=g->d_edges[e*2];
+        dst=g->d_edges[e*2+1];
 
         ui  en=g->d_offset[src+1];
         float cost=0;
@@ -53,7 +53,7 @@ __global__ void d_compute_RC_ATD(GPUGraph* g, float* apsp, float* edge_RC){
         cost = warp_sum(cost)*share;
         cost += ALPHA*apsp[m_ind(src, dst)]; // adding self cost
         if(LANEID==0)
-            edge_RC[e] = 1.0-cost/g->d_weights[e]; // todo should it be apsp[e]??
+            edge_RC[e] = 1.0-cost/g->d_weights[e]; 
     }   
 }
 
