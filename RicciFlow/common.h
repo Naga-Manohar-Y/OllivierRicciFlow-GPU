@@ -32,6 +32,7 @@ typedef ui ept;
 #define INF 1e6
 #define N_ITER 10
 #define ALPHA 0.5
+#define EPSILON 1
 #define m_ind(src,dst) (src*N+dst)
 
 inline void chkerr(cudaError_t code)

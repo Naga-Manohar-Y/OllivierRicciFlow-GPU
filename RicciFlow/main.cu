@@ -3,7 +3,7 @@
 #include "ATD.h"
 __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     float sumw = 0;
-    for(ui e=GLTHID; e<M; e+=N_THREADS){
+    for(ui e=GTHID; e<M; e+=N_THREADS){
         g->d_weights[e]-=EPSILON*edge_RC[e]*g->d_weights[e];
         sumw+=g->d_weights[e];
     } 
@@ -12,7 +12,7 @@ __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     atomicAdd(gsum, sumw);
 }
 __global__ void d_normalize_weights(GPUGraph* g, float* edge_RC){
-    for(ui e=GLTHID; e<M; e+=N_THREADS){
+    for(ui e=GTHID; e<M; e+=N_THREADS){
         g->d_weights[e]*=(m/gsum[0]);
     }
 }
