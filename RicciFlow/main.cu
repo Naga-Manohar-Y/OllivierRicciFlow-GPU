@@ -1,7 +1,7 @@
 #include "common.h"
 #include "graph.h"
 #include "ATD.h"
-__global__ d_update_weights(GPUGraph* g, float* edge_RC){
+__global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     float sumw = 0;
     for(ui e=GLTHID; e<M; e+=N_THREADS){
         g->d_weights[e]-=EPSILON*edge_RC[e]*g->d_weights[e];
@@ -11,7 +11,7 @@ __global__ d_update_weights(GPUGraph* g, float* edge_RC){
     if (LANEID==0)
     atomicAdd(gsum, sumw);
 }
-__global__ d_normalize_weights(GPUGraph* g, float* edge_RC){
+__global__ void d_normalize_weights(GPUGraph* g, float* edge_RC){
     for(ui e=GLTHID; e<M; e+=N_THREADS){
         g->d_weights[e]*=(m/gsum[0]);
     }
@@ -36,12 +36,12 @@ public:
         if (method=="ATD"){
             compute_RC_ATD(g, apsp, edge_RC);
         }
-        else if(method=="OTD"){
-            compute_RC_OTD(g, apsp, edge_RC);
-        }
-        else if(method=="Sinkhorn"){
-            compute_RC_Sinkhorn(g, apsp, edge_RC);
-        }
+        // else if(method=="OTD"){
+        //     compute_RC_OTD(g, apsp, edge_RC);
+        // }
+        // else if(method=="Sinkhorn"){
+        //     compute_RC_Sinkhorn(g, apsp, edge_RC);
+        // }
         else{
             cout<<"Not a valid method"<<endl;
             return;

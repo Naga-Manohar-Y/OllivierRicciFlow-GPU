@@ -32,7 +32,7 @@ void compute_apsp(GPUGraph* g, float* apsp){
     cudaDeviceSynchronize();
 }
 
-__global__ d_compute_RC_ATD(GPUGraph* g, float* apsp, float* edge_RC){
+__global__ void d_compute_RC_ATD(GPUGraph* g, float* apsp, float* edge_RC){
     for(ui e=GLWARPID; e<M; e+=N_WARPS){
         ui src, dst;
         src=g->edges[e*2];
