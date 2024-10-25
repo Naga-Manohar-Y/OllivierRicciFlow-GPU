@@ -13,7 +13,7 @@ __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     if (LANEID==0)
     atomicAdd(gsum, sumw);
 }
-__global__ void d_normalize_weights(GPUGraph* g, float* edge_RC){
+__global__ void d_normalize_weights(GPUGraph* g){
     for(ui e=GTHID; e<M; e+=N_THREADS){
         g->d_weights[e]*=(M/gsum[0]);
     }
@@ -57,9 +57,9 @@ public:
     void ricci_flow(){
 
         for(ui i=0;i<N_ITER; i++){
-            compute_edge_RC(g, apsp, edge_RC);
+            compute_edge_RC();
             // compute_node_RC(g, edge_RC, node_RC);
-            update_weights(g, edge_RC); // step 3, 4 of algo
+            update_weights(); // step 3, 4 of algo
             // todo check the condition cruvatuer values do not change a lot
         }
     }
