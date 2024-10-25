@@ -1,6 +1,8 @@
 #include "common.h"
 #include "graph.h"
 #include "ATD.h"
+float* gsum;
+
 __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     float sumw = 0;
     for(ui e=GTHID; e<M; e+=N_THREADS){
@@ -13,13 +15,12 @@ __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
 }
 __global__ void d_normalize_weights(GPUGraph* g, float* edge_RC){
     for(ui e=GTHID; e<M; e+=N_THREADS){
-        g->d_weights[e]*=(m/gsum[0]);
+        g->d_weights[e]*=(M/gsum[0]);
     }
 }
 
 class RicciFlow{
     GPUGraph* g;
-    float* gsum;
     float* apsp;
     float* edge_RC;
     float* node_RC;
