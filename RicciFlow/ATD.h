@@ -9,9 +9,7 @@ __global__ void fw_pass(GPUGraph* g, ui w, float* apsp) {
         ui u = GTHID/N;
         ui v = GTHID%N;
 
-        float x = 
-        
-        [m_ind(w, u)]; // It accesses only w-th row, but still need to address memory coalescing issue. and may be we need to calculate only upper/lower diagonal of matrix
+        float x = apsp[m_ind(w, u)]; // It accesses only w-th row, but still need to address memory coalescing issue. and may be we need to calculate only upper/lower diagonal of matrix
         float y = apsp[m_ind(w, v)];
         if(x==INF||y==INF) continue;
         x+=y;
@@ -26,7 +24,7 @@ __global__ void init_apsp(GPUGraph* g, float* apsp) {
 }
 
 void compute_apsp(GPUGraph* g, float* apsp){
-    cudaMemset(apsp, INF, apsp+N*N);
+    cudaMemset(apsp, INF, N*N*sizeof(float));
 
     init_apsp<<<BLK_NUMS, BLK_DIM>>>(g, apsp);
     
