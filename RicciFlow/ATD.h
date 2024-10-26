@@ -19,7 +19,7 @@ __global__ void fw_pass(GPUGraph* g, ui w, float* apsp) {
 
 __global__ void init_apsp(GPUGraph* g, float* apsp) {
     for(ui e=GTHID; e<M; e+=N_THREADS)
-        apsp[g->edges[2*e] * N + g->edges[2*e+1]] = g->d_weights[e];
+        apsp[(g->d_edges[2*e]) * N + (g->d_edges[2*e+1])] = g->d_weights[e];
         // apsp[m_ind(g->edges[2*e], g->edges[2*e+1])] = g->d_weights[e];
 }
 
