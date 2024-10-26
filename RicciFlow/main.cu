@@ -1,7 +1,7 @@
 #include "common.h"
 #include "graph.h"
 #include "ATD.h"
-__host__ __device__ float* gsum;
+__device__ float* gsum;
 
 __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     float sumw = 0;
@@ -49,7 +49,7 @@ public:
         }
     }
     void update_weights(){
-        *gsum = 0;
+        cudaMemset(gsum, sizeof(float), 0);
         d_update_weights<<<BLK_NUMS, BLK_DIM>>>(g, edge_RC);
         d_normalize_weights<<<BLK_NUMS, BLK_DIM>>>(g);
         cudaDeviceSynchronize();
