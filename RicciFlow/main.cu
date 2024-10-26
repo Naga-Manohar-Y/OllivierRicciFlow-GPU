@@ -63,7 +63,7 @@ public:
             update_weights(); // step 3, 4 of algo
             // todo check the condition curvature values do not change a lot
         }
-
+        cudaDeviceSynchronize();
         float *weights=new float[M];
         chkerr(cudaMemcpy(weights, g->d_weights, 100 * sizeof(float), cudaMemcpyDeviceToHost));
         for(ui i=0;i<M;i++){
