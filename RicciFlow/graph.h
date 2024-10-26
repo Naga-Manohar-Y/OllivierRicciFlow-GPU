@@ -80,12 +80,12 @@ public:
         chkerr(cudaMemcpy(d_degree, degree, (n) * sizeof(ui), cudaMemcpyHostToDevice));
         chkerr(cudaMalloc(&(d_offset), (n+1) * sizeof(ept)));
         chkerr(cudaMemcpy(d_offset, offset, (n+1) * sizeof(ept), cudaMemcpyHostToDevice));
-        chkerr(cudaMalloc(&(d_neighbors), m * sizeof(ui)));
-        chkerr(cudaMemcpy(d_neighbors, neighbors, m * sizeof(ui), cudaMemcpyHostToDevice));
-        chkerr(cudaMalloc(&(d_edges), 2*m * sizeof(ui)));
-        chkerr(cudaMemcpy(d_edges, edges, 2*m * sizeof(ui), cudaMemcpyHostToDevice));
-        chkerr(cudaMalloc(&(d_weights), m * sizeof(float)));
-        chkerr(cudaMemset(d_weights, 1, m * sizeof(float)));
+        // chkerr(cudaMalloc(&(d_neighbors), m * sizeof(ui)));
+        // chkerr(cudaMemcpy(d_neighbors, neighbors, m * sizeof(ui), cudaMemcpyHostToDevice));
+        // chkerr(cudaMalloc(&(d_edges), 2*m * sizeof(ui)));
+        // chkerr(cudaMemcpy(d_edges, edges, 2*m * sizeof(ui), cudaMemcpyHostToDevice));
+        // chkerr(cudaMalloc(&(d_weights), m * sizeof(float)));
+        // chkerr(cudaMemset(d_weights, 1, m * sizeof(float)));
     }
 };
 #endif
