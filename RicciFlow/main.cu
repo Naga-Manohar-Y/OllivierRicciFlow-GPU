@@ -64,7 +64,7 @@ public:
             // todo check the condition curvature values do not change a lot
         }
 
-        chkerr(cudaMemcpy(apsp, g->d_weights, m * sizeof(float), cudaMemcpyDeviceToHost));
+        chkerr(cudaMemcpy(apsp, g->d_weights, M * sizeof(float), cudaMemcpyDeviceToHost));
         for(ui i=0;i<m;i++){
             cout<<apsp[i]<<" ";
         }
