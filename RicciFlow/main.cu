@@ -65,7 +65,7 @@ public:
         }
 
         chkerr(cudaMemcpy(apsp, g->d_weights, M * sizeof(float), cudaMemcpyDeviceToHost));
-        for(ui i=0;i<m;i++){
+        for(ui i=0;i<M;i++){
             cout<<apsp[i]<<" ";
         }
 
