@@ -77,7 +77,7 @@ public:
     float* d_weights;
     void copyToGPU(){
         chkerr(cudaMalloc(&(d_degree), (n) * sizeof(ui)));
-        chkerr(cudaMemcpy(d_degree, degree, (n) * sizeof(ui), cudaMemcpyHostToDevice));
+        // chkerr(cudaMemcpy(d_degree, degree, (n) * sizeof(ui), cudaMemcpyHostToDevice));
         // chkerr(cudaMalloc(&(d_offset), (n+1) * sizeof(ept)));
         // chkerr(cudaMemcpy(d_offset, offset, (n+1) * sizeof(ept), cudaMemcpyHostToDevice));
         // chkerr(cudaMalloc(&(d_neighbors), m * sizeof(ui)));
