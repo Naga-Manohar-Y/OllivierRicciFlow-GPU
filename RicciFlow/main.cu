@@ -72,6 +72,6 @@ int main(int argc, char* argv[]) {
     g->readBinaryFile(argv[1]);
     g->copyToGPU();
     RicciFlow rf(g);
-    // rf.ricci_flow();
+    rf.ricci_flow();
     return 0;
 }
