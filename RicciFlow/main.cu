@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     GPUGraph *g;
     cudaMallocManaged(&g, sizeof(GPUGraph));
     g->readBinaryFile(argv[1]);
-    g->copyToGPU();
+    // g->copyToGPU();
     // RicciFlow rf(g);
     // rf.ricci_flow();
     return 0;
