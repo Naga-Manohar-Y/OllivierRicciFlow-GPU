@@ -60,7 +60,7 @@ public:
         for(ui i=0;i<N_ITER; i++){
             compute_edge_RC();
             // compute_node_RC(g, edge_RC, node_RC);
-            // update_weights(); // step 3, 4 of algo
+            update_weights(); // step 3, 4 of algo
             // todo check the condition curvature values do not change a lot
         }
         cudaDeviceSynchronize();
