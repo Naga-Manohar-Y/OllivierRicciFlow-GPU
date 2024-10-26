@@ -1,7 +1,7 @@
 #include "common.h"
 #include "graph.h"
 #include "ATD.h"
-float* gsum;
+__host__ __device__ float* gsum;
 
 __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     float sumw = 0;
