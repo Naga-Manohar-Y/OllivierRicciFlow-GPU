@@ -1,7 +1,7 @@
 #include "common.h"
 #include "graph.h"
 #include "ATD.h"
-float* gsum;
+__managed__ float gsum;
 
 __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     float sumw = 0;
@@ -11,11 +11,11 @@ __global__ void d_update_weights(GPUGraph* g, float* edge_RC){
     } 
     warp_sum(sumw);
     if (LANEID==0)
-    atomicAdd(gsum, sumw);
+    atomicAdd(&gsum, sumw);
 }
 __global__ void d_normalize_weights(GPUGraph* g){
     for(ui e=GTHID; e<M; e+=N_THREADS){
-        g->d_weights[e]*=(M/gsum[0]);
+        g->d_weights[e]*=(M/gsum);
     }
 }
 
@@ -31,7 +31,7 @@ public:
         cudaMallocManaged(&apsp, sizeof(float)*N*N);
         cudaMalloc(&edge_RC, sizeof(float)*M);
         cudaMalloc(&node_RC, sizeof(float)*N);
-        cudaMallocManaged(&gsum, sizeof(float));
+        // cudaMallocManaged(&gsum, sizeof(float));
     }
     void compute_edge_RC(){
         if (method=="ATD"){
@@ -49,7 +49,8 @@ public:
         }
     }
     void update_weights(){
-        cudaMemset(gsum, sizeof(float), 0);
+        gsum = 0;
+        // cudaMemset(gsum, sizeof(float), 0);
         d_update_weights<<<BLK_NUMS, BLK_DIM>>>(g, edge_RC);
         d_normalize_weights<<<BLK_NUMS, BLK_DIM>>>(g);
         cudaDeviceSynchronize();
