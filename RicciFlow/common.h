@@ -30,7 +30,7 @@ typedef ui ept;
 #define N (g->n)
 #define M (g->m)
 #define INF 1e6
-#define N_ITER 2
+#define N_ITER 10
 #define ALPHA 0.5
 #define EPSILON 1
 #define m_ind(src,dst) (src*N+dst)
