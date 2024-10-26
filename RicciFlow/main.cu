@@ -61,8 +61,14 @@ public:
             compute_edge_RC();
             // compute_node_RC(g, edge_RC, node_RC);
             update_weights(); // step 3, 4 of algo
-            // todo check the condition cruvatuer values do not change a lot
+            // todo check the condition curvature values do not change a lot
         }
+
+        chkerr(cudaMemcpy(apsp, g->d_weights, m * sizeof(float), cudaMemcpyDeviceToHost));
+        for(ui i=0;i<m;i++){
+            cout<<apsp[i]<<" ";
+        }
+
     }
 };
     
