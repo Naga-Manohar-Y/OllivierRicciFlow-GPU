@@ -28,7 +28,7 @@ class RicciFlow{
 public:
     RicciFlow(GPUGraph *_g){
         g=_g;
-        cudaMallocManaged(&apsp, sizeof(float)*N*N);
+        cudaMalloc(&apsp, sizeof(float)*N*N);
         cudaMalloc(&edge_RC, sizeof(float)*M);
         cudaMalloc(&node_RC, sizeof(float)*N);
         // cudaMallocManaged(&gsum, sizeof(float));
