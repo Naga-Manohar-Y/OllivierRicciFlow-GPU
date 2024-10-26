@@ -65,7 +65,7 @@ public:
         }
         cudaDeviceSynchronize();
         float *weights=new float[M];
-        chkerr(cudaMemcpy(weights, g->d_weights, 100 * sizeof(float), cudaMemcpyDeviceToHost));
+        chkerr(cudaMemcpy(weights, g->d_weights, 1 * sizeof(float), cudaMemcpyDeviceToHost));
         for(ui i=0;i<M;i++){
             cout<<weights[i]<<" ";
         }
