@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
     cudaMallocManaged(&g, sizeof(GPUGraph));
     g->readBinaryFile(argv[1]);
     g->copyToGPU();
-    RicciFlow rf(g);
-    rf.ricci_flow();
+    // RicciFlow rf(g);
+    // rf.ricci_flow();
     return 0;
 }
