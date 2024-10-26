@@ -47,7 +47,7 @@ public:
         std::cout << "Read n: " << n << ", m: " << m << std::endl;
 
         // Allocate memory for degree array
-        ui *degree = new ui[n];
+        degree = new ui[n];
         fread(degree, sizeof(ui), n, f);
 
         // Allocate memory for offset and neighbors arrays
@@ -77,7 +77,7 @@ public:
     float* d_weights;
     void copyToGPU(){
         chkerr(cudaMalloc(&(d_degree), (n) * sizeof(ui)));
-        // chkerr(cudaMemcpy(d_degree, degree, (n) * sizeof(ui), cudaMemcpyHostToDevice));
+        chkerr(cudaMemcpy(d_degree, degree, (n) * sizeof(ui), cudaMemcpyHostToDevice));
         // chkerr(cudaMalloc(&(d_offset), (n+1) * sizeof(ept)));
         // chkerr(cudaMemcpy(d_offset, offset, (n+1) * sizeof(ept), cudaMemcpyHostToDevice));
         // chkerr(cudaMalloc(&(d_neighbors), m * sizeof(ui)));
