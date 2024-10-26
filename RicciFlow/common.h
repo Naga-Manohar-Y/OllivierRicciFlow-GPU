@@ -53,4 +53,9 @@ __device__ float warp_sum(float val) {
     return val;
 }
 
+__global__ void fill(auto* arr, auto val, ui n){
+    for(ui i=GTHID; i<n ; i+=N_THREADS)
+        arr[i] = val;
+}
+
 #endif

@@ -85,7 +85,7 @@ public:
         chkerr(cudaMalloc(&(d_edges), 2*m * sizeof(ui)));
         chkerr(cudaMemcpy(d_edges, edges, 2*m * sizeof(ui), cudaMemcpyHostToDevice));
         chkerr(cudaMalloc(&(d_weights), m * sizeof(float)));
-        chkerr(cudaMemset(d_weights, 100, m * sizeof(float)));
+        fill<<<BLK_NUMS, BLK_DIM>>>(d_weights, 1, m);
     }
 };
 #endif

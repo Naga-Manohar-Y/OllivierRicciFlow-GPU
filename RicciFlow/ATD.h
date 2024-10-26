@@ -23,8 +23,9 @@ __global__ void init_apsp(GPUGraph* g, float* apsp) {
 }
 
 void compute_apsp(GPUGraph* g, float* apsp){
-    cudaMemset(apsp, INF, N*N*sizeof(float));
-
+    // cudaMemset(apsp, INF, N*N*sizeof(float));
+    
+    fill<<<BLK_NUMS, BLK_DIM>>>(apsp, INF, N*N);
     init_apsp<<<BLK_NUMS, BLK_DIM>>>(g, apsp);
     
     for(ui w=0;w<N;w++)
